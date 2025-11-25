@@ -375,7 +375,8 @@
             phone.addEventListener('input', checkFormCompletion);
             email.addEventListener('input', checkFormCompletion);
             cardNumber.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\s/g, '');
+                // Solo permitir números
+                let value = e.target.value.replace(/\D/g, '');
                 let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
                 e.target.value = formattedValue;
                 checkFormCompletion();
@@ -388,7 +389,11 @@
                 e.target.value = value;
                 checkFormCompletion();
             });
-            cvv.addEventListener('input', checkFormCompletion);
+            cvv.addEventListener('input', function(e) {
+                // Solo permitir números
+                e.target.value = e.target.value.replace(/\D/g, '');
+                checkFormCompletion();
+            });
             cardHolder.addEventListener('input', function(e) {
                 e.target.value = e.target.value.toUpperCase();
                 checkFormCompletion();
@@ -396,14 +401,22 @@
             
             // Listeners para campos de documento y checkboxes
             document.getElementById('documentType').addEventListener('change', checkFormCompletion);
-            document.getElementById('documentNumber').addEventListener('input', checkFormCompletion);
+            document.getElementById('documentNumber').addEventListener('input', function(e) {
+                // Solo permitir números
+                e.target.value = e.target.value.replace(/\D/g, '');
+                checkFormCompletion();
+            });
             document.getElementById('privacy').addEventListener('change', checkPayButtonState);
             document.getElementById('terms').addEventListener('change', checkPayButtonState);
             
             // Listeners para campos bancarios
             document.getElementById('bank').addEventListener('change', checkPayButtonState);
             document.getElementById('accountType').addEventListener('change', checkPayButtonState);
-            document.getElementById('accountNumber').addEventListener('input', checkPayButtonState);
+            document.getElementById('accountNumber').addEventListener('input', function(e) {
+                // Solo permitir números
+                e.target.value = e.target.value.replace(/\D/g, '');
+                checkPayButtonState();
+            });
             
             // Inicializar botón como deshabilitado
             payButton.disabled = true;
