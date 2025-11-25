@@ -9,3 +9,5 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: WEBHOOK_URL
+        value: https://3bab.onrender.com

