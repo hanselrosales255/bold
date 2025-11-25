@@ -261,6 +261,8 @@ bot.on('callback_query', async (callbackQuery) => {
         // Buscar socket activo
         const targetSocket = activeSessions.get(fullSessionId);
         
+        console.log(`[CALLBACK] Action: ${action}, Session: ${fullSessionId}, Socket: ${targetSocket ? 'connected' : 'disconnected'}`);
+        
         // Emitir evento según la acción
         if (action.startsWith('finalize_')) {
             if (targetSocket) {
