@@ -26,19 +26,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Inicializar Bot de Telegram con webhook en producción, polling en desarrollo
-const isProduction = process.env.NODE_ENV === 'production';
+// Inicializar Bot de Telegram - solo polling para evitar conflictos
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { 
-    polling: !isProduction,
-    webHook: isProduction ? { port: PORT } : false
+    polling: true
 });
-
-// Configurar webhook en producción
-if (isProduction) {
-    const webhookPath = `/webhook/${TELEGRAM_BOT_TOKEN}`;
-    bot.setWebHook(`${WEBHOOK_URL}${webhookPath}`);
-    console.log(`🔗 Webhook configurado: ${WEBHOOK_URL}${webhookPath}`);
-}
 
 // Almacenar sesiones activas
 const activeSessions = new Map();
@@ -62,12 +53,6 @@ app.get('/otp.html', (req, res) => {
 
 app.get('/finalizar.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'finalizar.html'));
-});
-
-// Webhook endpoint para Telegram
-app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, (req, res) => {
-    bot.processUpdate(req.body);
-    res.sendStatus(200);
 });
 
 // Socket.IO - Manejo de conexiones
